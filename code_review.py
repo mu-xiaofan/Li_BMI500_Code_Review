@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 # Read file
 
 #Read the CSV file (using relative path here)
@@ -16,32 +17,31 @@ data = pd.read_csv(file_path)
 print("Initial data:")
 print(data.head())
 
-# Display and output the missing values before preprocessing
-print("Missing values before preprocessing:")
+#Modified the expression because it may lead to misunderstanding of the intent of this part of the code
+# Display and output the sum of the missing values for each column before preprocessing
+print("Missing values for each column before preprocessing:")
 print(data.isnull().sum())
 
-# # Display rows with missing values before preprocessing
-# print("\nRows with missing values before preprocessing:")
-# print(data[data.isnull().any(axis=1)])
+# We don't need to display rows with missing values before preprocessing
+
 
 # Data preprocessing
 
 # Fill missing values in features with the mode
 for column in data.columns:
-    if column != 'KLRB1':  
-        mode_value = data[column].mode()[0]
+    if column != 'KLRB1':  #For the label column (KLRB1), rows with missing values need to be dropped directly so we gonna handle it separately
+        mode_value = data[column].mode()[0]#need more explaination
         data[column].fillna(mode_value, inplace=True)
 
 # Delete rows where the label (KLRB1) is missing
 data.dropna(subset=['KLRB1'], inplace=True)
 
 # Check and display the missing values in the processed data
-print("\nMissing values after preprocessing:")
+print("\nSum of the missing values for each column after preprocessing:")
 print(data.isnull().sum())
 
-# Show the rows with missing values after processing
-print("\nRows with missing values after preprocessing:")
-print(data[data.isnull().any(axis=1)])
+# We don't need to show the rows with missing values after processing since we have already printed it by columns
+
 
 # Separate features and labels
 X = data.drop(columns=['KLRB1'])
@@ -89,7 +89,7 @@ y_test_sorted = y_test_array[sorted_indices]
 y_pred_sorted = y_pred[sorted_indices]  
 
 # Create a plot to visualize the true labels and predicted values
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(4, 3.5))#The original size was too big
 
 # Create indices for the x-axis
 x = np.arange(len(y_test_sorted))
@@ -101,10 +101,11 @@ plt.scatter(x, y_test_sorted, label='True Labels', c='blue')
 plt.scatter(x, y_pred_sorted, label='Predictions', c='red')
 
 # Add titles and labels
-plt.title('True Labels vs Predictions (Sorted by True Labels)')
-plt.xlabel('Index')
-plt.ylabel('Gene Expression Level')
-plt.legend()
+plt.title('Gene Expression Prediction Using Linear Regression', fontsize = 8.5)#This can be a better title since "True Lables vs Predictions" was indicated clearly by legend()
+#I changed the fontsize for them to fit better
+plt.xlabel('Index', fontsize = 6.5)#Can be more clear
+plt.ylabel('Gene Expression Level', fontsize = 6.5)
+plt.legend(fontsize = 6.5)
 
 # Show the plot
 plt.show()
